@@ -66,12 +66,12 @@ func (usc *UscOrderCheckOut) Checkout(ctx context.Context, orderCheckout dto.Ord
 		usc.orderProductGateway.Create(ctx, orderProduct)
 	}
 
-	err2 := usc.doPayment(ctx, *order, orderProducts, payment, orderCheckout.MetaData)
-	if err2 != nil {
-		return dto.Order{}, err2
-	}
+	// err2 := usc.doPayment(ctx, *order, orderProducts, payment, orderCheckout.MetaData)
+	// if err2 != nil {
+	// 	return dto.Order{}, err2
+	// }
 
-	usc.orderGateway.Update(ctx, order)
+	// usc.orderGateway.Update(ctx, order)
 
 	return usc.orderPresenter.BuildOrderCreateResponse(*order, &payment.ID), nil
 }

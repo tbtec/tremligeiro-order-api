@@ -18,7 +18,7 @@ func NewOrderCheckoutController(container *container.Container) *OrderCheckoutCo
 	return &OrderCheckoutController{
 		usc: usecase.NewUseCaseOrderCheckout(
 			gateway.NewOrderGateway(container.OrderRepository),
-			gateway.NewProductGateway(container.ProductRepository),
+			gateway.NewProductGateway(container.ProductRepository, container.ProductService),
 			gateway.NewOrderProductGateway(container.OrderProductRepository),
 			gateway.NewPaymentGateway(container.PaymentService,
 				container.PaymentRepository),

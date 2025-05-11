@@ -34,11 +34,6 @@ func New(container *container.Container, config env.Config) *HTTPServer {
 
 	baseRouter := app.Group("/api/v1")
 
-	//Product Routes
-	baseRouter.Post("/product", adapt(controller.NewProductCreateRestController(container)))
-	baseRouter.Get("/product", adapt(controller.NewProductFindByCategoryRestController(container)))
-	baseRouter.Delete("/product/:productId", adapt(controller.NewProductDeleteByIdRestController(container)))
-	baseRouter.Put("/product/:productId", adapt(controller.NewProductUpdateByIdController(container)))
 	//Order Routes
 	baseRouter.Post("/order", adapt(controller.NewOrderCreateRestController(container)))
 	baseRouter.Get("/order", adapt(controller.NewOrderFindController(container)))
@@ -47,9 +42,6 @@ func New(container *container.Container, config env.Config) *HTTPServer {
 	baseRouter.Post("/order/:orderId/checkout", adapt(controller.NewOrderCheckoutRestController(container)))
 	//Payment Routes
 	baseRouter.Post("/payment/webhook", adapt(controller.NewPaymentWebHookRestController(container)))
-	//Customer Routes
-	baseRouter.Post("/customer", adapt(controller.NewCustomerCreateRestController(container)))
-	baseRouter.Get("/customer", adapt(controller.NewCustomerFindRestController(container)))
 
 	app.Use(middleware.NewNotFound())
 

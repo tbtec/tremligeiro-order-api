@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/tbtec/tremligeiro/internal/core/domain/entity"
-	"github.com/tbtec/tremligeiro/internal/infra/database/model"
 	"github.com/tbtec/tremligeiro/internal/infra/database/repository"
 	"github.com/tbtec/tremligeiro/internal/infra/external"
 )
@@ -20,26 +19,6 @@ func NewCustomerGateway(customerRepository repository.ICustomerRepository,
 		customerRepository: customerRepository,
 		customerService:    customerService,
 	}
-}
-
-func (gtw *CustomerGateway) Create(ctx context.Context, customer *entity.Customer) error {
-
-	customerModel := model.Customer{
-		ID:             customer.ID,
-		Name:           customer.Name,
-		Email:          customer.Email,
-		DocumentNumber: customer.DocumentNumber,
-		CreatedAt:      customer.CreatedAt,
-		UpdatedAt:      customer.UpdatedAt,
-	}
-
-	err := gtw.customerRepository.Create(ctx, &customerModel)
-
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func (gtw *CustomerGateway) FindByDocumentNumber(ctx context.Context, documentNumber string) (*entity.Customer, error) {
@@ -79,23 +58,6 @@ func (gtw *CustomerGateway) FindOne(ctx context.Context, id string) (*entity.Cus
 		}
 		return &customer, nil
 	}
-
-	// customerModel, err := gtw.customerRepository.FindOne(ctx, id)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// if customerModel != nil {
-	// 	customer = entity.Customer{
-	// 		ID:             customerModel.ID,
-	// 		Name:           customerModel.Name,
-	// 		DocumentNumber: customerModel.DocumentNumber,
-	// 		Email:          customerModel.Email,
-	// 		CreatedAt:      customerModel.CreatedAt,
-	// 		UpdatedAt:      customerModel.UpdatedAt,
-	// 	}
-	// 	return &customer, nil
-	// }
 
 	return nil, nil
 }

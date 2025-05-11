@@ -22,6 +22,7 @@ type Container struct {
 	PaymentRepository      repository.IPaymentRepository
 	PaymentService         external.IPaymentService
 	CustomerService        external.ICustomerService
+	ProductService         external.IProductService
 }
 
 func New(config env.Config) (*Container, error) {
@@ -51,6 +52,7 @@ func (container *Container) Start() error {
 	container.PaymentRepository = repository.NewPaymentRepository(container.TremLigeiroDB)
 	container.PaymentService = external.NewPaymentService(getPaymentConf(container.Config))
 	container.CustomerService = external.NewCustomerService(getCustomerConf(container.Config))
+	container.ProductService = external.NewProductService(getProductConf(container.Config))
 
 	return nil
 }
@@ -84,5 +86,11 @@ func getPaymentConf(config env.Config) external.PaymentConfig {
 func getCustomerConf(config env.Config) external.CustomerConfig {
 	return external.CustomerConfig{
 		Url: config.CustomerUrl,
+	}
+}
+
+func getProductConf(config env.Config) external.ProductConfig {
+	return external.ProductConfig{
+		Url: config.ProductUrl,
 	}
 }

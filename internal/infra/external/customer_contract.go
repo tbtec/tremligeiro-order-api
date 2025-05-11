@@ -5,11 +5,6 @@ import "time"
 type CustomerConfig struct {
 	Url string
 }
-
-type CustomerRequest struct {
-	ID string `json:"id"`
-}
-
 type CustomerResponse struct {
 	CustomerId     string    `json:"id"`
 	Name           string    `json:"name"`

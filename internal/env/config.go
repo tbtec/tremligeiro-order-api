@@ -20,6 +20,7 @@ type Config struct {
 	PaymentUrl       string `env:"PAYMENT_URL"`
 	PaymentAuthToken string `env:"PAYMENT_AUTH_TOKEN"`
 	CustomerUrl      string `env:"CUSTOMER_URL"`
+	ProductUrl       string `env:"PRODUCT_URL"`
 }
 
 func LoadEnvConfig() (Config, error) {
