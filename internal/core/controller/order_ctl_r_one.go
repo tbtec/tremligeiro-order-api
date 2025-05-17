@@ -16,7 +16,7 @@ type FindOneOrderController struct {
 func NewFindOneOrderController(container *container.Container) *FindOneOrderController {
 	return &FindOneOrderController{
 		usc: usecase.NewUscFindOneOrder(
-			gateway.NewOrderGateway(container.OrderRepository),
+			gateway.NewOrderGateway(container.OrderRepository, container.ProducerService),
 			gateway.NewOrderProductGateway(container.OrderProductRepository),
 			gateway.NewPaymentGateway(container.PaymentService, container.PaymentRepository),
 		),

@@ -73,6 +73,8 @@ func (usc *UscOrderCheckOut) Checkout(ctx context.Context, orderCheckout dto.Ord
 
 	// usc.orderGateway.Update(ctx, order)
 
+	_ = usc.orderGateway.PublishMessage(ctx, order)
+
 	return usc.orderPresenter.BuildOrderCreateResponse(*order, &payment.ID), nil
 }
 

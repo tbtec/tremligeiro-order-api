@@ -10,17 +10,19 @@ import (
 )
 
 type Config struct {
-	Env              string `env:"ENV" envDefault:"local"`
-	Port             int    `env:"PORT" envDefault:"8080"`
-	DbHost           string `env:"POSTGRES_HOST"`
-	DbUser           string `env:"POSTGRES_USER"`
-	DbPassword       string `env:"POSTGRES_PASS"`
-	DbName           string `env:"POSTGRES_DB"`
-	DbPort           int    `env:"POSTGRES_PORT"`
-	PaymentUrl       string `env:"PAYMENT_URL"`
-	PaymentAuthToken string `env:"PAYMENT_AUTH_TOKEN"`
-	CustomerUrl      string `env:"CUSTOMER_URL"`
-	ProductUrl       string `env:"PRODUCT_URL"`
+	Env                     string `env:"ENV" envDefault:"local"`
+	Port                    int    `env:"PORT" envDefault:"8080"`
+	DbHost                  string `env:"POSTGRES_HOST"`
+	DbUser                  string `env:"POSTGRES_USER"`
+	DbPassword              string `env:"POSTGRES_PASS"`
+	DbName                  string `env:"POSTGRES_DB"`
+	DbPort                  int    `env:"POSTGRES_PORT"`
+	PaymentUrl              string `env:"PAYMENT_URL"`
+	PaymentAuthToken        string `env:"PAYMENT_AUTH_TOKEN"`
+	CustomerUrl             string `env:"CUSTOMER_URL"`
+	ProductUrl              string `env:"PRODUCT_URL"`
+	OrderTopicArn           string `env:"ORDER_TOPIC_ARN"`
+	ProductionOrderQueueUrl string `env:"PRODUCTION_ORDER_QUEUE_URL"`
 }
 
 func LoadEnvConfig() (Config, error) {

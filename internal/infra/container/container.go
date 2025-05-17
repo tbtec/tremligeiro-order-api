@@ -2,12 +2,19 @@ package container
 
 import (
 	"context"
+	"fmt"
+	"log"
 	"log/slog"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/tbtec/tremligeiro/internal/env"
 	rdbms "github.com/tbtec/tremligeiro/internal/infra/database"
 	"github.com/tbtec/tremligeiro/internal/infra/database/postgres"
 	"github.com/tbtec/tremligeiro/internal/infra/database/repository"
+	"github.com/tbtec/tremligeiro/internal/infra/event"
 	"github.com/tbtec/tremligeiro/internal/infra/external"
 )
 
@@ -18,11 +25,12 @@ type Container struct {
 	OrderRepository        repository.IOrderRepository
 	OrderProductRepository repository.IOrderProductRepository
 	CustomerRepository     repository.ICustomerRepository
-	CategoryRepository     repository.ICategoryRepository
 	PaymentRepository      repository.IPaymentRepository
 	PaymentService         external.IPaymentService
 	CustomerService        external.ICustomerService
 	ProductService         external.IProductService
+	ProducerService        event.IProducerService
+	ConsumerService        event.IConsumerService
 }
 
 func New(config env.Config) (*Container, error) {
@@ -32,9 +40,35 @@ func New(config env.Config) (*Container, error) {
 	return &factory, nil
 }
 
-func (container *Container) Start() error {
+func (container *Container) Start(ctx context.Context) error {
 
-	err := postgres.Migrate(getPostgreSQLConf(container.Config))
+	var awsConfig aws.Config
+	var err error
+
+	if container.Config.Env == "local" { // LocalStack
+		awsConfig = container.GetLocalStackConfig(ctx)
+	} else {
+		// AWS
+		awsConfig, err = config.LoadDefaultConfig(ctx,
+			config.WithRegion("us-east-1"))
+		if err != nil {
+			log.Fatalf("erro ao carregar config: %v", err)
+		}
+	}
+
+	client := sns.NewFromConfig(awsConfig)
+
+	// Criar um tópico SNS
+	topicOut, err55 := client.CreateTopic(context.TODO(), &sns.CreateTopicInput{
+		Name: aws.String("meu-topico"),
+	})
+	if err55 != nil {
+		log.Fatalf("erro ao criar tópico: %v", err55)
+	}
+
+	fmt.Println("Tópico criado:", *topicOut.TopicArn)
+
+	err = postgres.Migrate(getPostgreSQLConf(container.Config))
 	if err != nil {
 		slog.ErrorContext(context.Background(), err.Error())
 	}
@@ -47,12 +81,13 @@ func (container *Container) Start() error {
 	container.ProductRepository = repository.NewProductRepository(container.TremLigeiroDB)
 	container.OrderRepository = repository.NewOrderRepository(container.TremLigeiroDB)
 	container.CustomerRepository = repository.NewCustomerRepository(container.TremLigeiroDB)
-	container.CategoryRepository = repository.NewCategoryRepository()
 	container.OrderProductRepository = repository.NewOrderProductRepository(container.TremLigeiroDB)
 	container.PaymentRepository = repository.NewPaymentRepository(container.TremLigeiroDB)
 	container.PaymentService = external.NewPaymentService(getPaymentConf(container.Config))
 	container.CustomerService = external.NewCustomerService(getCustomerConf(container.Config))
 	container.ProductService = external.NewProductService(getProductConf(container.Config))
+	container.ProducerService = event.NewProducerService(container.Config.OrderTopicArn, awsConfig)
+	// container.ConsumerService = event.NewConsumerService(container.Config.ProductionOrderQueueUrl, awsConfig)
 
 	return nil
 }
@@ -93,4 +128,19 @@ func getProductConf(config env.Config) external.ProductConfig {
 	return external.ProductConfig{
 		Url: config.ProductUrl,
 	}
+}
+
+func (container *Container) GetLocalStackConfig(ctx context.Context) aws.Config {
+
+	awsConfig, err := config.LoadDefaultConfig(ctx,
+		config.WithRegion("us-east-1"),
+		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider("test", "test", "")),
+	)
+	awsConfig.BaseEndpoint = aws.String("http://localhost:4566")
+
+	if err != nil {
+		log.Fatalf("erro ao carregar config: %v", err)
+	}
+
+	return awsConfig
 }

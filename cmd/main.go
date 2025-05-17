@@ -33,13 +33,21 @@ func run(ctx context.Context) error {
 		log.Fatal(err)
 	}
 
-	errStart := container.Start()
+	errStart := container.Start(ctx)
 	if errStart != nil {
 		log.Fatal(err)
 	}
 
 	httpServer := server.New(container, config)
+	// go func() {
 	httpServer.Listen()
+
+	// }()
+
+	// eventServer := event.NewEventServer(container)
+	// go func() {
+	// 	eventServer.Consume(ctx)
+	// }()
 
 	slog.InfoContext(ctx, "Shutting down services...")
 

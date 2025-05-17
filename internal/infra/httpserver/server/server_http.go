@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"fmt"
-	"log"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -56,7 +55,7 @@ func (server *HTTPServer) Listen() {
 	slog.InfoContext(context.Background(), fmt.Sprintf("Starting HTTP Server on port:%v", server.Config.Port))
 	err := server.Server.Listen(fmt.Sprintf(":%v", server.Config.Port))
 	if err != nil {
-		log.Panic(err)
+		// log.Panic(err)
 	}
 }
 

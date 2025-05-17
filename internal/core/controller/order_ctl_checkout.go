@@ -17,7 +17,7 @@ type OrderCheckoutController struct {
 func NewOrderCheckoutController(container *container.Container) *OrderCheckoutController {
 	return &OrderCheckoutController{
 		usc: usecase.NewUseCaseOrderCheckout(
-			gateway.NewOrderGateway(container.OrderRepository),
+			gateway.NewOrderGateway(container.OrderRepository, container.ProducerService),
 			gateway.NewProductGateway(container.ProductRepository, container.ProductService),
 			gateway.NewOrderProductGateway(container.OrderProductRepository),
 			gateway.NewPaymentGateway(container.PaymentService,

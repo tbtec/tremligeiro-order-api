@@ -19,5 +19,17 @@ services:
         volumes:
             - ./docs/mocks:/home/wiremock
         # restart: always   
+    localstack:
+        image: localstack/localstack:latest
+        ports:
+        - "4566:4566"            # LocalStack Gateway
+        - "4510-4559:4510-4559"  # external services port range
+        environment:
+        - DEBUG=0
+        - DEFAULT_REGION=us-east-1
+        - DOCKER_HOST=unix:///var/run/docker.sock
+        volumes:
+        - ./scripts/localstack/:/etc/localstack/init/ready.d/        
+
 volumes:
     pg_data:

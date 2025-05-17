@@ -16,7 +16,7 @@ type CreateOrderController struct {
 func NewCreateOrderController(container *container.Container) *CreateOrderController {
 	return &CreateOrderController{
 		usc: usecase.NewUseCaseCreateOrder(
-			gateway.NewOrderGateway(container.OrderRepository),
+			gateway.NewOrderGateway(container.OrderRepository, container.ProducerService),
 			gateway.NewCustomerGateway(container.CustomerRepository, container.CustomerService),
 		),
 	}
