@@ -10,5 +10,7 @@ data:
   POSTGRES_PORT: "5432"
   POSTGRES_USER: "admintremligeiro"
   POSTGRES_HOST: "tremligeiro-postgres-db.crbfewzyelcr.us-east-1.rds.amazonaws.com"
-  PAYMENT_URL: "https://api.mercadopago.com/instore/orders/qr/seller/collectors/202978706/pos/SUC001POS001/qrs"
-  
+  CUSTOMER_URL: "http://localhost:8081"
+  PRODUCT_URL: "http://localhost:8081"
+  ORDER_TOPIC_ARN: "arn:aws:sns:us-east-1:614424682483:OrderTopic"
+  PRODUCTION_ORDER_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/614424682483/ProductionQueueAppOrder"  

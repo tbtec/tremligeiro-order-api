@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: tremligeiro
+  name: tremligeiro-order
   namespace: tremligeiro
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
@@ -16,6 +16,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: tremligeiro
+                name: tremligeiro-order
                 port:
                   number: 8080

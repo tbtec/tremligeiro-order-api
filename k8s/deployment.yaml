@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tremligeiro
+  name: tremligeiro-order
   namespace: tremligeiro
 spec:
   selector:
     matchLabels:
-      app: tremligeiro     
+      app: tremligeiro-order     
   replicas: 1
   strategy:
     type: RollingUpdate
@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: tremligeiro
-          image: tbtec/tremligeiro:1.0.0
+          image: tbtec/tremligeiro-order:1.0.0
           imagePullPolicy: Always
           ports:
             - name: http
@@ -40,9 +40,9 @@ spec:
             successThreshold: 1
           envFrom:
             - configMapRef:
-                name: tremligeiro-config
+                name: tremligeiro-order-config
             - secretRef:
-                name: tremligeiro-secret
+                name: tremligeiro-order-secret
           resources:
             requests:
               memory: "80Mi"
