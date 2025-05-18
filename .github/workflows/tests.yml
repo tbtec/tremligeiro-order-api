@@ -33,7 +33,7 @@ jobs:
         run: go test -race -count=1 -coverprofile=./cov.out ./internal/...
 
       - name: Upload Coverage Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: cov.out
@@ -45,7 +45,7 @@ jobs:
           args: '-no-fail -fmt sonarqube -out gosec-report.json ./...'
 
       - name: Upload GoSec Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: sec
           path: gosec-report.json
@@ -60,13 +60,13 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Download Coverage Report
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: coverage
           path: .
 
       - name: Download GoSec Report
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: sec
           path: .
