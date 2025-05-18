@@ -51,10 +51,9 @@ func (presenter *OrderPresenter) BuildOrderContentResponse(orders []entity.Order
 }
 
 func (presenter *OrderPresenter) BuildOrderDetailsCreateResponse(order entity.Order,
-	orderProducts []entity.OrderProduct, payment *entity.Payment) dto.OrderDetails {
+	orderProducts []entity.OrderProduct) dto.OrderDetails {
 
 	orderProductsResponse := []dto.OrderProduct{}
-	paymentResponse := dto.Payment{}
 
 	for _, op := range orderProducts {
 		orderProductsResponse = append(orderProductsResponse, dto.OrderProduct{
@@ -64,13 +63,6 @@ func (presenter *OrderPresenter) BuildOrderDetailsCreateResponse(order entity.Or
 		})
 	}
 
-	if payment != nil {
-		paymentResponse = dto.Payment{
-			ID:     payment.ID,
-			Status: string(payment.Status),
-		}
-	}
-
 	return dto.OrderDetails{
 		ID:            order.ID,
 		CustomerId:    order.CustomerId,
@@ -78,7 +70,6 @@ func (presenter *OrderPresenter) BuildOrderDetailsCreateResponse(order entity.Or
 		TotalAmount:   order.TotalAmount,
 		CreatedAt:     order.CreatedAt,
 		UpdatedAt:     order.UpdatedAt,
-		Payment:       paymentResponse,
 		OrderProducts: orderProductsResponse,
 	}
 }

@@ -1,13 +1,13 @@
 package dto
 
-type PaymentWebHook struct {
-	Resource  string `json:"resource"`
-	Topic     string `json:"topic"`
-	Status    string `json:"status"`
-	PaymentId string `json:"paymentId"`
+type PaymentCheckout struct {
+	OrderId     string                       `json:"orderId" validate:"required"`
+	TotalAmount float64                      `json:"totalAmount"`
+	Products    []PaymentItemCheckoutProduct `json:"products" validate:"required"`
+	MetaData    MetaData                     `json:"metadata"`
 }
 
-type Payment struct {
-	ID     string `json:"id"`
-	Status string `json:"status"`
+type PaymentItemCheckoutProduct struct {
+	ProductId string `json:"productId"`
+	Quantity  int    `json:"quantity"`
 }

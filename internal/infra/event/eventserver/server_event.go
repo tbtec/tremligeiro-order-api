@@ -1,4 +1,4 @@
-package server_event
+package eventserver
 
 import (
 	"context"

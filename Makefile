@@ -5,7 +5,6 @@ run:
 	go run cmd/main.go
 
 test:
-	# go test -cover ./internal/... -coverpkg ./...
 	go test -race -count=1 ./internal/... -coverprofile=coverage.out
 
 test-bdd:

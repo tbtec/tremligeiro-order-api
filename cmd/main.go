@@ -11,7 +11,7 @@ import (
 
 	"github.com/tbtec/tremligeiro/internal/env"
 	"github.com/tbtec/tremligeiro/internal/infra/container"
-	eventserver "github.com/tbtec/tremligeiro/internal/infra/event/server"
+	"github.com/tbtec/tremligeiro/internal/infra/event/eventserver"
 	"github.com/tbtec/tremligeiro/internal/infra/httpserver/server"
 )
 
