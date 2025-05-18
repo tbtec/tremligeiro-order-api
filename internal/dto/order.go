@@ -44,3 +44,8 @@ type OrderDetails struct {
 type UpdateOrder struct {
 	Status string `json:"status" validate:"oneof='IN_PREPARATION' 'READY' 'FINALIZED'"`
 }
+
+type OrderEvent struct {
+	ID     string `json:"id"`
+	Status string `json:"status"`
+}

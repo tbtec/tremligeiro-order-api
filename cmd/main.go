@@ -5,9 +5,13 @@ import (
 	"log"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/tbtec/tremligeiro/internal/env"
 	"github.com/tbtec/tremligeiro/internal/infra/container"
+	eventserver "github.com/tbtec/tremligeiro/internal/infra/event/server"
 	"github.com/tbtec/tremligeiro/internal/infra/httpserver/server"
 )
 
@@ -39,15 +43,23 @@ func run(ctx context.Context) error {
 	}
 
 	httpServer := server.New(container, config)
-	// go func() {
+	eventServer := eventserver.NewEventServer(container, config)
+
+	slog.InfoContext(ctx, "Starting Event Server...")
+	go func(ctx context.Context) {
+		for {
+			eventServer.Consume(ctx)
+		}
+	}(ctx)
+
 	httpServer.Listen()
 
-	// }()
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
+	<-sc
 
-	// eventServer := event.NewEventServer(container)
-	// go func() {
-	// 	eventServer.Consume(ctx)
-	// }()
+	ctx, shutdown := context.WithTimeout(context.Background(), 2*time.Second)
+	defer shutdown()
 
 	slog.InfoContext(ctx, "Shutting down services...")
 

@@ -53,7 +53,7 @@ func (order *Order) SetStatus(status OrderStatus) {
 func (order *Order) ValidateStatus(currentStatus OrderStatus, newStatus OrderStatus) bool {
 	switch currentStatus {
 	case OrderStatusPending:
-		return newStatus == OrderStatusReceived || newStatus == OrderStatusExpired
+		return newStatus == OrderStatusReceived || newStatus == OrderStatusExpired || newStatus == OrderStatusInPreparation
 	case OrderStatusReceived:
 		return newStatus == OrderStatusInPreparation
 	case OrderStatusInPreparation:

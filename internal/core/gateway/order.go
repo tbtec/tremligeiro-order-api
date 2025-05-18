@@ -5,22 +5,17 @@ import (
 	"time"
 
 	"github.com/tbtec/tremligeiro/internal/core/domain/entity"
-	"github.com/tbtec/tremligeiro/internal/dto"
 	"github.com/tbtec/tremligeiro/internal/infra/database/model"
 	"github.com/tbtec/tremligeiro/internal/infra/database/repository"
-	"github.com/tbtec/tremligeiro/internal/infra/event"
 )
 
 type OrderGateway struct {
 	orderRepository repository.IOrderRepository
-	producerService event.IProducerService
 }
 
-func NewOrderGateway(orderRepository repository.IOrderRepository,
-	producerService event.IProducerService) *OrderGateway {
+func NewOrderGateway(orderRepository repository.IOrderRepository) *OrderGateway {
 	return &OrderGateway{
 		orderRepository: orderRepository,
-		producerService: producerService,
 	}
 }
 
@@ -104,20 +99,20 @@ func (gtw *OrderGateway) Find(ctx context.Context) ([]entity.Order, error) {
 	return orders, nil
 }
 
-func (gtw *OrderGateway) PublishMessage(ctx context.Context, order *entity.Order) error {
-	orderDto := dto.Order{
-		ID:          order.ID,
-		CustomerId:  order.CustomerId,
-		Status:      string(order.Status),
-		TotalAmount: order.TotalAmount,
-		CreatedAt:   order.CreatedAt,
-		UpdatedAt:   order.UpdatedAt,
-	}
+// func (gtw *OrderGateway) PublishMessage(ctx context.Context, order *entity.Order) error {
+// 	orderDto := dto.Order{
+// 		ID:          order.ID,
+// 		CustomerId:  order.CustomerId,
+// 		Status:      string(order.Status),
+// 		TotalAmount: order.TotalAmount,
+// 		CreatedAt:   order.CreatedAt,
+// 		UpdatedAt:   order.UpdatedAt,
+// 	}
 
-	err := gtw.producerService.PublishMessage(ctx, orderDto)
-	if err != nil {
-		return err
-	}
+// 	err := gtw.producerService.PublishMessage(ctx, orderDto)
+// 	if err != nil {
+// 		return err
+// 	}
 
-	return nil
-}
+// 	return nil
+// }

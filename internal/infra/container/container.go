@@ -2,14 +2,12 @@ package container
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
-	"github.com/aws/aws-sdk-go-v2/service/sns"
 	"github.com/tbtec/tremligeiro/internal/env"
 	rdbms "github.com/tbtec/tremligeiro/internal/infra/database"
 	"github.com/tbtec/tremligeiro/internal/infra/database/postgres"
@@ -56,18 +54,6 @@ func (container *Container) Start(ctx context.Context) error {
 		}
 	}
 
-	client := sns.NewFromConfig(awsConfig)
-
-	// Criar um tópico SNS
-	topicOut, err55 := client.CreateTopic(context.TODO(), &sns.CreateTopicInput{
-		Name: aws.String("meu-topico"),
-	})
-	if err55 != nil {
-		log.Fatalf("erro ao criar tópico: %v", err55)
-	}
-
-	fmt.Println("Tópico criado:", *topicOut.TopicArn)
-
 	err = postgres.Migrate(getPostgreSQLConf(container.Config))
 	if err != nil {
 		slog.ErrorContext(context.Background(), err.Error())
@@ -87,7 +73,7 @@ func (container *Container) Start(ctx context.Context) error {
 	container.CustomerService = external.NewCustomerService(getCustomerConf(container.Config))
 	container.ProductService = external.NewProductService(getProductConf(container.Config))
 	container.ProducerService = event.NewProducerService(container.Config.OrderTopicArn, awsConfig)
-	// container.ConsumerService = event.NewConsumerService(container.Config.ProductionOrderQueueUrl, awsConfig)
+	container.ConsumerService = event.NewConsumerService(container.Config.ProductionOrderQueueUrl, awsConfig)
 
 	return nil
 }

@@ -1,4 +1,4 @@
-create table if not exists order.order_product
+create table if not exists tremligeiro_order.order_product
 (
     order_product_id uuid not null primary key,
     order_id uuid not null,

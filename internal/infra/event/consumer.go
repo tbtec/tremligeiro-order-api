@@ -3,6 +3,7 @@ package event
 import (
 	"context"
 	"encoding/json"
+	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
@@ -10,7 +11,7 @@ import (
 )
 
 type IConsumerService interface {
-	ConsumeMessage(ctx context.Context) (dto.Order, error)
+	ConsumeMessage(ctx context.Context) (*dto.Order, error)
 }
 
 type ConsumerService struct {
@@ -26,28 +27,41 @@ func NewConsumerService(QueueUrl string, config aws.Config) IConsumerService {
 	}
 }
 
-func (consumer *ConsumerService) ConsumeMessage(ctx context.Context) (dto.Order, error) {
+func (consumer *ConsumerService) ConsumeMessage(ctx context.Context) (*dto.Order, error) {
 	// Receive a message from the queue
 	resp, err := consumer.Client.ReceiveMessage(ctx, &sqs.ReceiveMessageInput{
 		QueueUrl:            &consumer.QueueUrl,
 		MaxNumberOfMessages: 1,
 	})
 	if err != nil {
-		return dto.Order{}, err
+		return nil, err
 	}
 
 	if len(resp.Messages) == 0 {
-		return dto.Order{}, nil // No messages available
+		return nil, nil // No messages available
 	}
 
 	// Deserialize the message body to Order
 	var order dto.Order
 	err = json.Unmarshal([]byte(*resp.Messages[0].Body), &order)
 	if err != nil {
-		return dto.Order{}, err
+		return nil, err
 	}
 
-	return order, nil
+	slog.InfoContext(ctx, "Received message", "MessageId", *resp.Messages[0].MessageId)
+	slog.InfoContext(ctx, "Received message", "body", order)
+
+	// Delete the message from the queue
+	out, delErr := consumer.Client.DeleteMessage(ctx, &sqs.DeleteMessageInput{
+		QueueUrl:      &consumer.QueueUrl,
+		ReceiptHandle: resp.Messages[0].ReceiptHandle,
+	})
+	if delErr != nil {
+		slog.ErrorContext(ctx, "Error deleting message", "error", delErr)
+	}
+	slog.InfoContext(ctx, "Message deleted", "recepit", *&out.ResultMetadata)
+
+	return &order, nil
 }
 
 func (consumer *ConsumerService) DeleteMessage(ctx context.Context, receiptHandle string) error {

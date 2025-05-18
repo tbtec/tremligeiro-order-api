@@ -9,7 +9,7 @@ services:
             - POSTGRES_USER=$POSTGRES_USER
             - POSTGRES_PASSWORD=$POSTGRES_PASS
         volumes:
-            - pg_data:/var/lib/postgresql/data
+            - pg_data:/var/lib/postgresql/data2
         # restart: always
     wiremock:
         container_name: 'wiremock_tremligeiro_order'

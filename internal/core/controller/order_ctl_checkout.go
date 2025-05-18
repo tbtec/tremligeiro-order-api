@@ -17,12 +17,14 @@ type OrderCheckoutController struct {
 func NewOrderCheckoutController(container *container.Container) *OrderCheckoutController {
 	return &OrderCheckoutController{
 		usc: usecase.NewUseCaseOrderCheckout(
-			gateway.NewOrderGateway(container.OrderRepository, container.ProducerService),
+			gateway.NewOrderGateway(container.OrderRepository),
 			gateway.NewProductGateway(container.ProductRepository, container.ProductService),
 			gateway.NewOrderProductGateway(container.OrderProductRepository),
 			gateway.NewPaymentGateway(container.PaymentService,
 				container.PaymentRepository),
-			presenter.NewOrderPresenter()),
+			presenter.NewOrderPresenter(),
+			gateway.NewOrderProducerGateway(container.ProducerService),
+		),
 	}
 }
 

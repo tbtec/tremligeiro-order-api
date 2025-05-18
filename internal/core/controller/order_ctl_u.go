@@ -15,7 +15,7 @@ type UpdateOrderController struct {
 func NewUpdateOrderController(container *container.Container) *UpdateOrderController {
 	return &UpdateOrderController{
 		usc: usecase.NewUscUpdateOrder(
-			gateway.NewOrderGateway(container.OrderRepository, container.ProducerService),
+			gateway.NewOrderGateway(container.OrderRepository),
 		),
 	}
 }

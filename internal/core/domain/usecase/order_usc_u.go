@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log/slog"
 
 	"github.com/tbtec/tremligeiro/internal/core/domain/entity"
 	"github.com/tbtec/tremligeiro/internal/core/gateway"
@@ -20,6 +21,7 @@ func NewUscUpdateOrder(orderGateway *gateway.OrderGateway) *UscUpdateOrder {
 }
 
 func (usc *UscUpdateOrder) Update(ctx context.Context, orderId string, newStatus string) error {
+	slog.InfoContext(ctx, "Updating order status", "orderId", orderId, "newStatus", newStatus)
 	order, err := usc.getOrder(ctx, orderId)
 	if err != nil {
 		return err

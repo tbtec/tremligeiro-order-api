@@ -23,6 +23,7 @@ const (
 	migrationsDockerDir  = "/app/migrations/"
 	migrationsLocalPath  = "file://./scripts/migrations"
 	migrationsDockerPath = "file:///app/migrations/"
+	schemaName           = "tremligeiro_order"
 )
 
 type PostgreSQLConf struct {
@@ -40,7 +41,7 @@ func New(conf PostgreSQLConf) (rdbms.RDBMS, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn),
 		&gorm.Config{NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   "tremligeiro.",
+			TablePrefix:   schemaName + ".",
 			SingularTable: true,
 		}})
 

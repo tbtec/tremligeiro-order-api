@@ -21,24 +21,28 @@ var (
 )
 
 type UscOrderCheckOut struct {
-	orderProductGateway *gateway.OrderProductGateway
-	orderGateway        *gateway.OrderGateway
-	productGateway      *gateway.ProductGateway
-	paymentGateway      *gateway.PaymentGateway
-	orderPresenter      *presenter.OrderPresenter
+	orderProductGateway  *gateway.OrderProductGateway
+	orderGateway         *gateway.OrderGateway
+	productGateway       *gateway.ProductGateway
+	paymentGateway       *gateway.PaymentGateway
+	orderPresenter       *presenter.OrderPresenter
+	orderProducerGateway *gateway.OrderProducerGateway
 }
 
 func NewUseCaseOrderCheckout(orderGateway *gateway.OrderGateway,
 	productGateway *gateway.ProductGateway,
 	orderProductGateway *gateway.OrderProductGateway,
 	paymentGateway *gateway.PaymentGateway,
-	orderPresenter *presenter.OrderPresenter) *UscOrderCheckOut {
+	orderPresenter *presenter.OrderPresenter,
+	orderProducerGateway *gateway.OrderProducerGateway,
+) *UscOrderCheckOut {
 	return &UscOrderCheckOut{
-		orderProductGateway: orderProductGateway,
-		orderGateway:        orderGateway,
-		productGateway:      productGateway,
-		paymentGateway:      paymentGateway,
-		orderPresenter:      orderPresenter,
+		orderProductGateway:  orderProductGateway,
+		orderGateway:         orderGateway,
+		productGateway:       productGateway,
+		paymentGateway:       paymentGateway,
+		orderPresenter:       orderPresenter,
+		orderProducerGateway: orderProducerGateway,
 	}
 }
 
@@ -73,7 +77,7 @@ func (usc *UscOrderCheckOut) Checkout(ctx context.Context, orderCheckout dto.Ord
 
 	// usc.orderGateway.Update(ctx, order)
 
-	_ = usc.orderGateway.PublishMessage(ctx, order)
+	_ = usc.orderProducerGateway.PublishMessage(ctx, order)
 
 	return usc.orderPresenter.BuildOrderCreateResponse(*order, &payment.ID), nil
 }

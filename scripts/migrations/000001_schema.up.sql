@@ -1,1 +1,1 @@
-create schema if not exists order;
+create schema if not exists tremligeiro_order;

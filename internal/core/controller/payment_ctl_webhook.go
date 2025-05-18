@@ -16,7 +16,7 @@ type PaymentWebHookController struct {
 func NewPaymentWebHookController(container *container.Container) *PaymentWebHookController {
 	return &PaymentWebHookController{
 		usc: usecase.NewUseCasePaymentWebHook(
-			gateway.NewOrderGateway(container.OrderRepository, container.ProducerService),
+			gateway.NewOrderGateway(container.OrderRepository),
 			gateway.NewPaymentGateway(container.PaymentService, container.PaymentRepository)),
 	}
 }
