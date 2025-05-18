@@ -19,10 +19,10 @@ build-ci:
 	go build -o bin/${BINARY_NAME} -ldflags="-s -w" -tags appsec cmd/main.go
 
 build-docker:
-	docker build -t tbtec/tremligeiro:1.0.0 .	
+	docker build -t tbtec/tremligeiro-order:1.0.0 .	
 
 run-docker:
-	docker run -p 8080:8080 tbtec/tremligeiro:1.0.0 --env-file .env
+	docker run -p 8080:8080 tbtec/tremligeiro-order:1.0.0 --env-file .env
 
 run-compose:
 	docker compose up
@@ -31,7 +31,7 @@ run-compose-enviroment:
 	docker compose -f docker-compose-enviroment.yaml up
 
 docker-push:
-	docker push tbtec/tremligeiro:1.0.0
+	docker push tbtec/tremligeiro-order:1.0.0
 
 kube-eks-connect:
 	aws eks update-kubeconfig --name ${AWS_EKS_CLUSTER_NAME} --region us-east-1
@@ -46,7 +46,7 @@ kube-deploy:
 	kubectl apply -f k8s/configmap.yaml
 	kubectl apply -f k8s/secret.yaml
 	kubectl apply -f k8s/deployment.yaml
-	kubectl apply -f k8s/service.yaml
+	kubectl apply -f k8s/service.yaml	
 	kubectl apply -f k8s/ingress.yaml
 	kubectl apply -f k8s/hpa.yaml
 
@@ -56,6 +56,7 @@ kube-deploy-eks:
 	kubectl apply -f k8s/secret.yaml
 	kubectl apply -f k8s/deployment.yaml
 	kubectl apply -f k8s/service.yaml
+	kubectl apply -f k8s/service-account.yaml
 	kubectl apply -f k8s/ingress.yaml
 	kubectl apply -f k8s/hpa.yaml
 	
@@ -64,6 +65,7 @@ kube-deploy-eks-destroy:
 	kubectl delete -f k8s/secret.yaml
 	kubectl delete -f k8s/deployment.yaml
 	kubectl delete -f k8s/service.yaml
+	kubectl delete -f k8s/service-account.yaml
 	kubectl delete -f k8s/ingress.yaml
 	kubectl delete -f k8s/hpa.yaml
 	kubectl delete -f k8s/namespace.yaml

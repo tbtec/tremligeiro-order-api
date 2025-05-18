@@ -17,12 +17,14 @@ spec:
       annotations:
         kubernetes.io/change-cause: "UPDATE"
       labels:
-        app: tremligeiro
+        app: tremligeiro-order
         environment: "dev"
         version: "1.0.0"
     spec:
+      automountServiceAccountToken: false
+      serviceAccountName: tremligeiro
       containers:
-        - name: tremligeiro
+        - name: tremligeiro-order
           image: tbtec/tremligeiro-order:1.0.0
           imagePullPolicy: Always
           ports:
