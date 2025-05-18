@@ -7,19 +7,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
-#   sonarqube:
-#     name: SonarQube
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-#       - name: SonarQube Scan
-#         uses: SonarSource/sonarqube-scan-action@v5
-#         env:
-#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   test:
-    name: Tests (Unit)
+    name: Build Tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,7 +18,7 @@ jobs:
         with:
           go-version: ${{ vars.GO_VERSION }}
 
-      - name: Run Unit Tests
+      - name: Run Unit Tests and Generate Coverage Report
         run: go test -race -count=1 -coverprofile=./cov.out ./internal/...
 
       - name: Upload Coverage Report
@@ -39,7 +28,7 @@ jobs:
           path: cov.out
           retention-days: 1
 
-      - name: Run GoSec Security Scanner
+      - name: Run GoSec Security Scanner and Generate Report
         uses: securego/gosec@master
         with:
           args: '-no-fail -fmt sonarqube -out gosec-report.json ./...'
@@ -54,7 +43,7 @@ jobs:
   analysis:
     needs: 
       - test
-    name: SonarCloud Analysis
+    name: SonarQube 
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -71,8 +60,7 @@ jobs:
           name: sec
           path: .
 
-
-      - name: SonarCloud Scan
+      - name: SonarCloud Analysis
         uses: SonarSource/sonarcloud-github-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
