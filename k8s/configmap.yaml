@@ -13,4 +13,6 @@ data:
   CUSTOMER_URL: "http://tremligeiro-customer.tremligeiro.svc.cluster.local:8080"
   PRODUCT_URL: "http://tremligeiro-product.tremligeiro.svc.cluster.local:8080"
   ORDER_TOPIC_ARN: "arn:aws:sns:us-east-1:614424682483:OrderTopic"
-  PRODUCTION_ORDER_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/614424682483/ProductionQueueAppOrder"  
+  PRODUCTION_ORDER_QUEUE_URL: "https://sqs.us-east-1.amazonaws.com/614424682483/ProductionQueueAppOrder" 
+  AWS_REGION: "us-east-1"
+  AWS_USE_CREDENTIALS: "true" 

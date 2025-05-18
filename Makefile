@@ -5,7 +5,14 @@ run:
 	go run cmd/main.go
 
 test:
-	go test -cover ./internal/... -coverpkg ./...
+	# go test -cover ./internal/... -coverpkg ./...
+	go test -race -count=1 ./internal/... -coverprofile=coverage.out
+
+test-bdd:
+
+test-coverage:
+	go test -cover ./internal/... -coverpkg ./... -coverprofile=coverage.out
+	go tool cover -html=coverage.out -o coverage.html
 
 pre-build:
 	go mod download
@@ -56,16 +63,13 @@ kube-deploy-eks:
 	kubectl apply -f k8s/secret.yaml
 	kubectl apply -f k8s/deployment.yaml
 	kubectl apply -f k8s/service.yaml
-	kubectl apply -f k8s/service-account.yaml
 	kubectl apply -f k8s/ingress.yaml
-	kubectl apply -f k8s/hpa.yaml
 	
 kube-deploy-eks-destroy:
 	kubectl delete -f k8s/configmap.yaml
 	kubectl delete -f k8s/secret.yaml
 	kubectl delete -f k8s/deployment.yaml
 	kubectl delete -f k8s/service.yaml
-	kubectl delete -f k8s/service-account.yaml
 	kubectl delete -f k8s/ingress.yaml
-	kubectl delete -f k8s/hpa.yaml
+#	kubectl delete -f k8s/hpa.yaml
 	kubectl delete -f k8s/namespace.yaml

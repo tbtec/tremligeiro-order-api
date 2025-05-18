@@ -23,6 +23,11 @@ type Config struct {
 	ProductUrl              string `env:"PRODUCT_URL"`
 	OrderTopicArn           string `env:"ORDER_TOPIC_ARN"`
 	ProductionOrderQueueUrl string `env:"PRODUCTION_ORDER_QUEUE_URL"`
+	AwsAccessKeyId          string `env:"AWS_ACCESS_KEY_ID"`
+	AwsSecretAccessKey      string `env:"AWS_SECRET_ACCESS_KEY"`
+	AwsSessionToken         string `env:"AWS_SESSION_TOKEN"`
+	AwsRegion               string `env:"AWS_REGION"`
+	AwsUseCredentials       string `env:"AWS_USE_CREDENTIALS" envDefault:"false"`
 }
 
 func LoadEnvConfig() (Config, error) {

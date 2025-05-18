@@ -1,4 +1,4 @@
-package server
+package server_event
 
 import (
 	"context"
@@ -37,7 +37,7 @@ func (eventServer *EventServer) Consume(ctx context.Context) {
 	if order == nil {
 		// slog.InfoContext(ctx, "No messages available")
 	} else {
-		slog.InfoContext(ctx, "Received message: ", order)
+		// slog.InfoContext(ctx, "Received message: ", &order)
 
 		err2 := eventServer.ConsumerProductionController.Execute(ctx, order.ID, order.Status)
 		if err2 != nil {

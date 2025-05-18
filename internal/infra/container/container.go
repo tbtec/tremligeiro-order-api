@@ -46,9 +46,8 @@ func (container *Container) Start(ctx context.Context) error {
 	if container.Config.Env == "local" { // LocalStack
 		awsConfig = container.GetLocalStackConfig(ctx)
 	} else {
-		// AWS
 		awsConfig, err = config.LoadDefaultConfig(ctx,
-			config.WithRegion("us-east-1"))
+			config.WithRegion(container.Config.AwsRegion))
 		if err != nil {
 			log.Fatalf("erro ao carregar config: %v", err)
 		}
