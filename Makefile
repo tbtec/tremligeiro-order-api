@@ -7,7 +7,8 @@ run:
 test:
 	go test -race -count=1 ./internal/... -coverprofile=coverage.out
 
-test-bdd:
+test-e2e:
+	go test -count=1 -timeout 300s ./test/...
 
 test-coverage:
 	go test -cover ./internal/... -coverpkg ./... -coverprofile=coverage.out
