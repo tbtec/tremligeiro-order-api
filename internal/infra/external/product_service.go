@@ -28,7 +28,9 @@ func (service *ProductService) FindOne(ctx context.Context, id string) (*Product
 	productResponse := ProductResponse{}
 
 	url := service.config.Url
-	path := "/api/v1/product"
+	path := "/api/v1/product" + "/" + id
+
+	slog.InfoContext(ctx, "ProductService - FindOne", "url", url, "path", path)
 
 	response, err := service.httpclient.R().
 		SetHeader("Content-Type", "application/json").

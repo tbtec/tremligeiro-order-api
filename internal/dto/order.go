@@ -37,7 +37,6 @@ type OrderDetails struct {
 	TotalAmount   float64        `json:"totalAmount"`
 	CreatedAt     time.Time      `json:"createdAt"`
 	UpdatedAt     time.Time      `json:"updatedAt"`
-	Payment       Payment        `json:"payment"`
 	OrderProducts []OrderProduct `json:"orderProducts"`
 }
 

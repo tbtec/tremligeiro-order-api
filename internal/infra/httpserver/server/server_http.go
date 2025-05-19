@@ -40,8 +40,6 @@ func New(container *container.Container, config env.Config) *HTTPServer {
 	baseRouter.Get("/order/:orderId", adapt(controller.NewOrderFindOneRestController(container)))
 	baseRouter.Put("/order/:orderId", adapt(controller.NewUpdateOrderRestController(container)))
 	baseRouter.Post("/order/:orderId/checkout", adapt(controller.NewOrderCheckoutRestController(container)))
-	//Payment Routes
-	baseRouter.Post("/payment/webhook", adapt(controller.NewPaymentWebHookRestController(container)))
 
 	app.Use(middleware.NewNotFound())
 

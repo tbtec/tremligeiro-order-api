@@ -8,7 +8,7 @@ import (
 )
 
 type ICustomerService interface {
-	FindOne(ctx context.Context, id string) (*CustomerResponse, error)
+	FindOne(ctx context.Context, id string) (*CustomerContent, error)
 }
 
 type CustomerService struct {
@@ -23,11 +23,11 @@ func NewCustomerService(config CustomerConfig) ICustomerService {
 	}
 }
 
-func (service *CustomerService) FindOne(ctx context.Context, id string) (*CustomerResponse, error) {
-	customerResponse := CustomerResponse{}
+func (service *CustomerService) FindOne(ctx context.Context, id string) (*CustomerContent, error) {
+	customerResponse := CustomerContent{}
 
 	url := service.config.Url
-	path := "/api/v1/customer"
+	path := "/api/v1/customer" + "/" + id
 
 	response, err := service.httpclient.R().
 		SetHeader("Content-Type", "application/json").
@@ -38,7 +38,7 @@ func (service *CustomerService) FindOne(ctx context.Context, id string) (*Custom
 	}
 
 	if response.StatusCode() != 200 {
-		return &CustomerResponse{}, response.Error().(error)
+		return &CustomerContent{}, response.Error().(error)
 	}
 
 	return &customerResponse, nil

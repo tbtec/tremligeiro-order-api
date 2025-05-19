@@ -4,11 +4,12 @@ import (
 	"context"
 
 	"github.com/go-resty/resty/v2"
+	"github.com/tbtec/tremligeiro/internal/dto"
 	"github.com/tbtec/tremligeiro/internal/infra/httpclient"
 )
 
 type IPaymentService interface {
-	RequestPayment(ctx context.Context, request PaymentRequest) (PaymentResponse, error)
+	RequestPayment(ctx context.Context, request dto.PaymentCheckout) (PaymentResponse, error)
 }
 
 type PaymentService struct {
@@ -23,15 +24,13 @@ func NewPaymentService(config PaymentConfig) IPaymentService {
 	}
 }
 
-func (service *PaymentService) RequestPayment(ctx context.Context, request PaymentRequest) (PaymentResponse, error) {
+func (service *PaymentService) RequestPayment(ctx context.Context, request dto.PaymentCheckout) (PaymentResponse, error) {
 	paymentResponse := PaymentResponse{}
 
-	url := service.config.Url
-	token := "Bearer " + service.config.Token
+	url := service.config.Url + "/api/v1/payment"
 
 	response, err := service.httpclient.R().
 		SetHeader("Content-Type", "application/json").
-		SetHeader("Authorization", token).
 		SetBody(request).
 		SetResult(&paymentResponse).
 		Post(url)
@@ -39,7 +38,7 @@ func (service *PaymentService) RequestPayment(ctx context.Context, request Payme
 		return paymentResponse, err
 	}
 
-	if response.StatusCode() != 201 {
+	if response.StatusCode() != 200 {
 		return PaymentResponse{}, response.Error().(error)
 	}
 

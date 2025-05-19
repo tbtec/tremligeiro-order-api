@@ -70,28 +70,23 @@ func (usc *UscOrderCheckOut) Checkout(ctx context.Context, orderCheckout dto.Ord
 		usc.orderProductGateway.Create(ctx, orderProduct)
 	}
 
-	// err2 := usc.doPayment(ctx, *order, orderProducts, payment, orderCheckout.MetaData)
-	// if err2 != nil {
-	// 	return dto.Order{}, err2
-	// }
+	err2 := usc.doPayment(ctx, *order, orderProducts, orderCheckout.MetaData)
+	if err2 != nil {
+		return dto.Order{}, err2
+	}
 
-	// usc.orderGateway.Update(ctx, order)
+	usc.orderGateway.Update(ctx, order)
 
 	_ = usc.orderProducerGateway.PublishMessage(ctx, order)
 
 	return usc.orderPresenter.BuildOrderCreateResponse(*order, &payment.ID), nil
 }
 
-func (usc *UscOrderCheckOut) doPayment(ctx context.Context, order entity.Order, orderProducts []entity.OrderProduct, payment entity.Payment, metadata dto.MetaData) error {
+func (usc *UscOrderCheckOut) doPayment(ctx context.Context, order entity.Order, orderProducts []entity.OrderProduct, metadata dto.MetaData) error {
 
-	err := usc.paymentGateway.RequestPayment(ctx, order, orderProducts, &payment, metadata)
+	err := usc.paymentGateway.RequestPayment(ctx, order, orderProducts, metadata)
 	if err != nil {
 		return err
-	}
-
-	err2 := usc.paymentGateway.Create(ctx, &payment)
-	if err2 != nil {
-		return err2
 	}
 
 	return nil

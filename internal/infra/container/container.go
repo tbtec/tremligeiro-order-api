@@ -43,7 +43,7 @@ func (container *Container) Start(ctx context.Context) error {
 	var awsConfig aws.Config
 	var err error
 
-	if container.Config.Env == "local" { // LocalStack
+	if container.Config.Env == "local-stack" { // LocalStack
 		awsConfig = container.GetLocalStackConfig(ctx)
 	} else {
 		awsConfig, err = config.LoadDefaultConfig(ctx,

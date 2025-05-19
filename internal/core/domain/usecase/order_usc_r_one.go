@@ -12,7 +12,6 @@ import (
 type UscFindOneOrder struct {
 	orderProductGateway *gateway.OrderProductGateway
 	orderGateway        *gateway.OrderGateway
-	paymentGateway      *gateway.PaymentGateway
 	orderPresenter      *presenter.OrderPresenter
 }
 
@@ -22,7 +21,6 @@ func NewUscFindOneOrder(orderGateway *gateway.OrderGateway,
 	return &UscFindOneOrder{
 		orderProductGateway: orderProductGateway,
 		orderGateway:        orderGateway,
-		paymentGateway:      paymentGateway,
 		orderPresenter:      presenter.NewOrderPresenter(),
 	}
 }
@@ -36,12 +34,8 @@ func (usc *UscFindOneOrder) FindOne(ctx context.Context, orderId string) (dto.Or
 	if err != nil {
 		return dto.OrderDetails{}, err
 	}
-	payment, err := usc.paymentGateway.FindByOrderId(ctx, orderId)
-	if err != nil {
-		return dto.OrderDetails{}, err
-	}
 
-	return usc.orderPresenter.BuildOrderDetailsCreateResponse(*order, orderProducts, payment), nil
+	return usc.orderPresenter.BuildOrderDetailsCreateResponse(*order, orderProducts), nil
 }
 
 func (usc *UscFindOneOrder) getOrder(ctx context.Context, orderId string) (*entity.Order, error) {
