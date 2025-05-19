@@ -49,12 +49,12 @@ func (gtw *CustomerGateway) FindOne(ctx context.Context, id string) (*entity.Cus
 
 	if customerResponse != nil {
 		customer = entity.Customer{
-			ID:             customerResponse.CustomerId,
-			Name:           customerResponse.Name,
-			DocumentNumber: customerResponse.DocumentNumber,
-			Email:          customerResponse.Email,
-			CreatedAt:      customerResponse.CreatedAt,
-			UpdatedAt:      customerResponse.UpdatedAt,
+			ID:             customerResponse.Content.CustomerId,
+			Name:           customerResponse.Content.Name,
+			DocumentNumber: customerResponse.Content.DocumentNumber,
+			Email:          customerResponse.Content.Email,
+			CreatedAt:      customerResponse.Content.CreatedAt,
+			UpdatedAt:      customerResponse.Content.UpdatedAt,
 		}
 		return &customer, nil
 	}

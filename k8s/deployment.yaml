@@ -21,6 +21,7 @@ spec:
         environment: "dev"
         version: "1.0.0"
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: tremligeiro-order
           image: tbtec/tremligeiro-order:1.0.0
@@ -47,9 +48,11 @@ spec:
             requests:
               memory: "80Mi"
               cpu: "80m"
+              ephemeral-storage: "100Mi"
             limits:
               memory: "400Mi"
               cpu: "200m"
+              ephemeral-storage: "500Mi"
       terminationGracePeriodSeconds: 30
       nodeSelector: {}
       tolerations: []

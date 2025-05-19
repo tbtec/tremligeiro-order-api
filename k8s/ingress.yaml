@@ -12,10 +12,10 @@ spec:
   rules:
     - http:
         paths:
-          - path: /
+          - path: /api/v1/order
             pathType: Prefix
             backend:
               service:
                 name: tremligeiro-order
                 port:
-                  number: 8080
+                  number: 8080                
