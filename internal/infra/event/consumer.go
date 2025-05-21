@@ -3,12 +3,20 @@ package event
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log/slog"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/tbtec/tremligeiro/internal/dto"
 )
+
+type SNSEnvelope struct {
+	Type      string `json:"Type"`
+	MessageId string `json:"MessageId"`
+	TopicArn  string `json:"TopicArn"`
+	Message   string `json:"Message"`
+}
 
 type IConsumerService interface {
 	ConsumeMessage(ctx context.Context) (*dto.Order, error)
@@ -41,13 +49,17 @@ func (consumer *ConsumerService) ConsumeMessage(ctx context.Context) (*dto.Order
 		return nil, nil // No messages available
 	}
 
-	// Deserialize the message body to Order
-	var order dto.Order
-	err = json.Unmarshal([]byte(*resp.Messages[0].Body), &order)
+	var envelope SNSEnvelope
+	err = json.Unmarshal([]byte(*resp.Messages[0].Body), &envelope)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("erro ao desserializar envelope SNS: %w", err)
 	}
 
+	var order dto.Order
+	err = json.Unmarshal([]byte(envelope.Message), &order)
+	if err != nil {
+		return nil, fmt.Errorf("erro ao desserializar Order: %w", err)
+	}
 	slog.InfoContext(ctx, "Received message", "MessageId", *resp.Messages[0].MessageId)
 	slog.InfoContext(ctx, "Received message", "body", order)
 

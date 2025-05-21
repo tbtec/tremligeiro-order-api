@@ -2,6 +2,7 @@ package external
 
 import (
 	"context"
+	"log/slog"
 
 	"github.com/go-resty/resty/v2"
 	"github.com/tbtec/tremligeiro/internal/dto"
@@ -28,6 +29,8 @@ func (service *PaymentService) RequestPayment(ctx context.Context, request dto.P
 	paymentResponse := PaymentResponse{}
 
 	url := service.config.Url + "/api/v1/payment"
+
+	slog.InfoContext(ctx, "PaymentService - Request Payment", "url", url)
 
 	response, err := service.httpclient.R().
 		SetHeader("Content-Type", "application/json").
