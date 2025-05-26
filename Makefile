@@ -4,7 +4,7 @@ AWS_EKS_CLUSTER_NAME=tremligeiro-eks-cluster
 run:
 	go run cmd/main.go
 
-test:
+test-unit:
 	go test -race -count=1 ./internal/... -coverprofile=coverage.out
 
 test-e2e:
