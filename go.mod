@@ -1,6 +1,8 @@
 module github.com/tbtec/tremligeiro
 
-go 1.22.0
+go 1.23
+
+toolchain go1.23.9
 
 require (
 	github.com/aws/aws-sdk-go-v2 v1.36.3
@@ -19,6 +21,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/oklog/ulid/v2 v2.1.0
 	github.com/stretchr/testify v1.9.0
+	go.uber.org/mock v0.5.2
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.12
 )
