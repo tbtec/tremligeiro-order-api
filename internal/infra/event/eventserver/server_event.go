@@ -32,7 +32,7 @@ func (eventServer *EventServer) Consume(ctx context.Context) {
 	// Start the consumer service
 	order, err := eventServer.ConsumerService.ConsumeMessage(ctx)
 	if err != nil {
-		slog.ErrorContext(ctx, "Error reading message ", err)
+		slog.ErrorContext(ctx, "Error reading message", slog.Any("error", err))
 	}
 	if order == nil {
 		// slog.InfoContext(ctx, "No messages available")
@@ -41,7 +41,7 @@ func (eventServer *EventServer) Consume(ctx context.Context) {
 
 		err2 := eventServer.ConsumerProductionController.Execute(ctx, order.ID, order.Status)
 		if err2 != nil {
-			slog.ErrorContext(ctx, "Error processing message: ", err2)
+			slog.ErrorContext(ctx, "Error processing message", slog.Any("error", err2))
 
 		}
 	}

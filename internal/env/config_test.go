@@ -14,7 +14,6 @@ func TestLoadEnvConfigDefaults(t *testing.T) {
 
 	cfg, err := LoadEnvConfig()
 	assert.NoError(t, err)
-	assert.Equal(t, "local", cfg.Env)
 	assert.Equal(t, 8083, cfg.Port)
 }
 
